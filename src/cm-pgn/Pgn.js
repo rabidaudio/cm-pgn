@@ -16,9 +16,9 @@ export class Pgn {
         const sloppy = !!props.sloppy
         this.header = new Header(headerString)
         if (this.header.tags[TAGS.SetUp] === "1" && this.header.tags[TAGS.FEN]) {
-            this.history = new History(historyString, this.header.tags[TAGS.FEN], sloppy)
+            this.history = new History(historyString, this.header.tags[TAGS.FEN], sloppy, this.header.length, this.header.rowCount + 1)
         } else {
-            this.history = new History(historyString, undefined, sloppy)
+            this.history = new History(historyString, undefined, sloppy, this.header.length, this.header.rowCount + 1)
         }
     }
 

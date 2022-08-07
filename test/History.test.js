@@ -169,8 +169,6 @@ describe('History', () => {
         const history = new History(`1. e2-e4 e7e5 (e6)
 2. Nf3 ! {Great move!} Nc6
 `, undefined, true, 165, 7)
-        console.log(history)
-
         assert.equal(history.moves[0].location.start.offset, 165 + 3)
         assert.equal(history.moves[0].location.start.line, 7 + 1)
         assert.equal(history.moves[0].location.start.column, 4)

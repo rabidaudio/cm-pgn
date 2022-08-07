@@ -34,6 +34,12 @@ hxg5 29. b3 Ke6 30. a3 Kd6 31. axb4 cxb4 32. Ra5 Nd5 33. f3 Bc8 34. Kf2 Bf5
 Nf2 42. g4 Bd3 43. Re6 1/2-1/2`
         const ignored = new Pgn(gamePgn)
         // assert.equal(pgn.header.tags.get("Date"), "1992.11.04")
+
+        assert.equal(ignored.header.length, 165)
+        assert.equal(ignored.header.rowCount, 7)
+        assert.equal(ignored.history.moves[9].location.start.offset, 255)
+        assert.equal(ignored.history.moves[9].location.start.line, 10)
+        assert.equal(ignored.history.moves[9].location.start.column, 19)
     })
     
     it('should load a chess puzzle', () => {

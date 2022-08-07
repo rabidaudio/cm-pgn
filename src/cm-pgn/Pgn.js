@@ -15,10 +15,11 @@ export class Pgn {
         const historyString = pgnString.substr(lastHeaderElement)
         const sloppy = !!props.sloppy
         this.header = new Header(headerString)
+        const offsetLines = this.header.rowCount == 0 ? 1 : this.header.rowCount - 1
         if (this.header.tags[TAGS.SetUp] === "1" && this.header.tags[TAGS.FEN]) {
-            this.history = new History(historyString, this.header.tags[TAGS.FEN], sloppy, this.header.length, this.header.rowCount + 1)
+            this.history = new History(historyString, this.header.tags[TAGS.FEN], sloppy, this.header.length, offsetLines)
         } else {
-            this.history = new History(historyString, undefined, sloppy, this.header.length, this.header.rowCount + 1)
+            this.history = new History(historyString, undefined, sloppy, this.header.length, offsetLines)
         }
     }
 

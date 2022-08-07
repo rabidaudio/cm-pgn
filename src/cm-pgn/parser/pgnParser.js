@@ -192,8 +192,8 @@ function peg$parse(input, options) {
       peg$c42 = /^[0-9]/,
       peg$c43 = peg$classExpectation([["0", "9"]], false, false),
       peg$c44 = function(digits) { return makeInteger(digits); },
-      peg$c45 = " ",
-      peg$c46 = peg$literalExpectation(" ", false),
+      peg$c45 = /^[ \t\r\n]/,
+      peg$c46 = peg$classExpectation([" ", "\t", "\r", "\n"], false, false),
       peg$c47 = function() { return '';},
       peg$c48 = function(fig, disc, str, col, row, pr, ch) { var hm = { location: location() }; hm.fig = (fig ? fig : null); hm.disc =  (disc ? disc : null); hm.strike = (str ? str : null); hm.col = col; hm.row = row; hm.check = (ch ? ch : null); hm.promotion = pr; hm.notation = (fig ? fig : "") + (disc ? disc : "") + (str ? str : "") + col + row + (pr ? pr : "") + (ch ? ch : ""); return hm; },
       peg$c49 = function(fig, cols, rows, str, col, row, pr, ch) { var hm = { location: location() }; hm.fig = (fig ? fig : null); hm.strike = (str =='x' ? str : null); hm.col = col; hm.row = row; hm.check = (ch ? ch : null); hm.notation = (fig && (fig!=='P') ? fig : "") + cols + rows + (str=='x' ? str : "-") + col  + row + (pr ? pr : "") + (ch ? ch : ""); hm.promotion = pr; return hm; },
@@ -1200,8 +1200,8 @@ function peg$parse(input, options) {
 
     s0 = peg$currPos;
     s1 = [];
-    if (input.charCodeAt(peg$currPos) === 32) {
-      s2 = peg$c45;
+    if (peg$c45.test(input.charAt(peg$currPos))) {
+      s2 = input.charAt(peg$currPos);
       peg$currPos++;
     } else {
       s2 = peg$FAILED;
@@ -1210,8 +1210,8 @@ function peg$parse(input, options) {
     if (s2 !== peg$FAILED) {
       while (s2 !== peg$FAILED) {
         s1.push(s2);
-        if (input.charCodeAt(peg$currPos) === 32) {
-          s2 = peg$c45;
+        if (peg$c45.test(input.charAt(peg$currPos))) {
+          s2 = input.charAt(peg$currPos);
           peg$currPos++;
         } else {
           s2 = peg$FAILED;

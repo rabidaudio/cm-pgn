@@ -20,7 +20,7 @@ export class History {
         if (!historyString) {
             this.clear()
         } else {
-            const parsedMoves = pgnParser.parse(historyString.replace(/\s\s+/g, " ").replace(/\n/g, " "))
+            const parsedMoves = pgnParser.parse(historyString)
             this.moves = this.traverse(parsedMoves[0], setUpFen, undefined, 1, sloppy)
         }
         this.setUpFen = setUpFen
@@ -68,6 +68,7 @@ export class History {
                         }
                     }
                     move.variation = moves
+                    move.location = parsedMove.notation.location
                     moves.push(move)
                     previousMove = move
                 } else {

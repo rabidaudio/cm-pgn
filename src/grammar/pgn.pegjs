@@ -70,7 +70,7 @@ integer "integer"
     = digits:[0-9]+ { return makeInteger(digits); }
 
 whiteSpace
-    = " "+ { return '';}
+    = [ \t\r\n]+ { return '';}
 
 halfMove
   = fig:figure? & checkdisc disc:discriminator str:strike?

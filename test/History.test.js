@@ -165,4 +165,44 @@ describe('History', () => {
         assert.equal(history.moves[1].variations.length, 1)
     })
 
+    it('should parse return the move location in the original string', () => {
+        const history = new History(`1. e2-e4 e7e5 (e6)
+2. Nf3 ! {Great move!} Nc6
+`, undefined, true)
+        assert.equal(history.moves[0].location.start.offset, 3)
+        assert.equal(history.moves[0].location.start.line, 1)
+        assert.equal(history.moves[0].location.start.column, 4)
+        assert.equal(history.moves[0].location.end.offset, 8)
+        assert.equal(history.moves[0].location.end.line, 1)
+        assert.equal(history.moves[0].location.end.column, 9)
+
+        assert.equal(history.moves[1].location.start.offset, 9)
+        assert.equal(history.moves[1].location.start.line, 1)
+        assert.equal(history.moves[1].location.start.column, 10)
+        assert.equal(history.moves[1].location.end.offset, 13)
+        assert.equal(history.moves[1].location.end.line, 1)
+        assert.equal(history.moves[1].location.end.column, 14)
+
+        assert.equal(history.moves[1].variations[0][0].location.start.offset, 15)
+        assert.equal(history.moves[1].variations[0][0].location.start.line, 1)
+        assert.equal(history.moves[1].variations[0][0].location.start.column, 16)
+        assert.equal(history.moves[1].variations[0][0].location.end.offset, 17)
+        assert.equal(history.moves[1].variations[0][0].location.end.line, 1)
+        assert.equal(history.moves[1].variations[0][0].location.end.column, 18)
+
+
+        assert.equal(history.moves[2].location.start.offset, 22)
+        assert.equal(history.moves[2].location.start.line, 2)
+        assert.equal(history.moves[2].location.start.column, 4)
+        assert.equal(history.moves[2].location.end.offset, 25)
+        assert.equal(history.moves[2].location.end.line, 2)
+        assert.equal(history.moves[2].location.end.column, 7)
+
+        assert.equal(history.moves[3].location.start.offset, 42)
+        assert.equal(history.moves[3].location.start.line, 2)
+        assert.equal(history.moves[3].location.start.column, 24)
+        assert.equal(history.moves[3].location.end.offset, 45)
+        assert.equal(history.moves[3].location.end.line, 2)
+        assert.equal(history.moves[3].location.end.column, 27)
+    })
 })

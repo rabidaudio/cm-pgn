@@ -16,12 +16,12 @@ function IllegalMoveException(fen, notation) {
 
 export class History {
 
-    constructor(historyString = undefined, setUpFen = undefined, sloppy = false) {
+    constructor(historyString = undefined, setUpFen = undefined, sloppy = false, offset = 0, offsetLines = 0) {
         if (!historyString) {
             this.clear()
         } else {
             const parsedMoves = pgnParser.parse(historyString)
-            this.moves = this.traverse(parsedMoves[0], setUpFen, undefined, 1, sloppy)
+            this.moves = this.traverse(parsedMoves[0], setUpFen, undefined, 1, sloppy, offset, offsetLines)
         }
         this.setUpFen = setUpFen
     }
@@ -30,7 +30,7 @@ export class History {
         this.moves = []
     }
 
-    traverse(parsedMoves, fen, parent = undefined, ply = 1, sloppy = false) {
+    traverse(parsedMoves, fen, parent = undefined, ply = 1, sloppy = false, offset = 0, offsetLines = 0) {
         const chess = fen ? new Chess(fen) : new Chess() // chess.js must be included in HTML
         const moves = []
         let previousMove = parent
@@ -64,11 +64,24 @@ export class History {
                     if (parsedVariations.length > 0) {
                         const lastFen = moves.length > 0 ? moves[moves.length - 1].fen : fen
                         for (let parsedVariation of parsedVariations) {
-                            move.variations.push(this.traverse(parsedVariation, lastFen, previousMove, ply, sloppy))
+                            move.variations.push(this.traverse(parsedVariation, lastFen, previousMove, ply, sloppy, offset, offsetLines))
                         }
                     }
                     move.variation = moves
-                    move.location = parsedMove.notation.location
+                    if (parsedMove.notation.location) {
+                        move.location = {
+                            start: {
+                                offset: parsedMove.notation.location.start.offset + offset,
+                                line: parsedMove.notation.location.start.line + offsetLines,
+                                column: parsedMove.notation.location.start.column
+                            },
+                            end: {
+                                offset: parsedMove.notation.location.end.offset + offset,
+                                line: parsedMove.notation.location.end.line + offsetLines,
+                                column: parsedMove.notation.location.end.column
+                            }
+                        }
+                    }
                     moves.push(move)
                     previousMove = move
                 } else {

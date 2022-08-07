@@ -61,6 +61,8 @@ export class Header {
                 }
             }
         }
+        this.length = headerString.length
+        this.rowCount = rows && rows.length || 0
     }
 
     clear() {

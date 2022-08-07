@@ -6,9 +6,10 @@
 import {pgnParser} from "./parser/pgnParser.js"
 import {Chess} from "../../lib/chess.mjs/Chess.js"
 
-function IllegalMoveException(fen, notation) {
+function IllegalMoveException(fen, notation, location) {
     this.fen = fen
     this.notation = notation
+    this.location = location
     this.toString = function () {
         return "IllegalMoveException: " + fen + " => " + notation
     }
@@ -20,8 +21,16 @@ export class History {
         if (!historyString) {
             this.clear()
         } else {
-            const parsedMoves = pgnParser.parse(historyString)
-            this.moves = this.traverse(parsedMoves[0], setUpFen, undefined, 1, sloppy, offset, offsetLines)
+            try {
+                const parsedMoves = pgnParser.parse(historyString)
+                this.moves = this.traverse(parsedMoves[0], setUpFen, undefined, 1, sloppy, offset, offsetLines)
+            } catch (syntaxError) {
+                syntaxError.location.start.offset += offset
+                syntaxError.location.start.line += offsetLines
+                syntaxError.location.end.offset += offset
+                syntaxError.location.end.line += offsetLines
+                throw syntaxError
+            }
         }
         this.setUpFen = setUpFen
     }
@@ -38,6 +47,18 @@ export class History {
             if (parsedMove.notation) {
                 const notation = parsedMove.notation.notation
                 const move = chess.move(notation, {sloppy: sloppy})
+                const location = {
+                    start: {
+                        offset: parsedMove.notation.location.start.offset + offset,
+                        line: parsedMove.notation.location.start.line + offsetLines,
+                        column: parsedMove.notation.location.start.column
+                    },
+                    end: {
+                        offset: parsedMove.notation.location.end.offset + offset,
+                        line: parsedMove.notation.location.end.line + offsetLines,
+                        column: parsedMove.notation.location.end.column
+                    }
+                }
                 if (move) {
                     if (previousMove) {
                         move.previous = previousMove
@@ -68,24 +89,11 @@ export class History {
                         }
                     }
                     move.variation = moves
-                    if (parsedMove.notation.location) {
-                        move.location = {
-                            start: {
-                                offset: parsedMove.notation.location.start.offset + offset,
-                                line: parsedMove.notation.location.start.line + offsetLines,
-                                column: parsedMove.notation.location.start.column
-                            },
-                            end: {
-                                offset: parsedMove.notation.location.end.offset + offset,
-                                line: parsedMove.notation.location.end.line + offsetLines,
-                                column: parsedMove.notation.location.end.column
-                            }
-                        }
-                    }
+                    move.location = location
                     moves.push(move)
                     previousMove = move
                 } else {
-                    throw new IllegalMoveException(chess.fen(), notation)
+                    throw new IllegalMoveException(chess.fen(), notation, location)
                 }
             }
             ply++

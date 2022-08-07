@@ -93,7 +93,7 @@ export class History {
                     moves.push(move)
                     previousMove = move
                 } else {
-                    throw new IllegalMoveException(chess.fen(), notation, location)
+                    throw new IllegalMoveException(chess.fen(), notation, parsedMove.notation.location)
                 }
             }
             ply++
